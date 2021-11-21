@@ -39,10 +39,14 @@ def getArguments():
 def threadParser(url, page):
 
     print("---------------------- Parsing Page " +
-          str(page) + "----------------------")
+          str(page + 1) + "----------------------")
+
     pageAuthorlist = []
     pagePostlist = []
-    url_contents = urllib.request.urlopen(url + "p" + str(page)).read()
+    if page == 0:
+        url_contents = urllib.request.urlopen(url).read()
+    else:    
+        url_contents = urllib.request.urlopen(url + "p" + str(page)).read()
     soup = bs.BeautifulSoup(url_contents, "html.parser")
 
     for div in soup.find_all("div", {'class': "post-bbcode-quote-wrapper"}):
@@ -85,12 +89,9 @@ def addAuthorPostToDict(author, post):
 def appendPostToOneAuthor(post):
     one_author_posts.append(post)
 
-
 def pageCounter(url, numberofpages, user):
-    print("inside page counter")
-
     if user is None:
-        for page in range(1, numberofpages):
+        for page in range(0, numberofpages):
             pageAuthorlist, pagePostlist = threadParser(url, page)
             x = 0
             for author in pageAuthorlist:
@@ -99,7 +100,7 @@ def pageCounter(url, numberofpages, user):
             time.sleep(2)
 
     else:
-        for page in range(1, numberofpages):
+        for page in range(0, numberofpages):
             pageAuthorlist, pagePostlist = threadParser(url, page)
             x = 0
             for author in pageAuthorlist:
